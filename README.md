@@ -1,0 +1,2 @@
+# Transfer SelfBot
+DiscordのサーバーチャットをWebhookで転送するセルフBot
