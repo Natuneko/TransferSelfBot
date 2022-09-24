@@ -17,22 +17,24 @@ client.on("ready", async () => {
 client.on("messageCreate", async message => {
     if(message.guildId == config.tranferFrom){
 
-        for(const user in  message.mentions.users){
+        message.mentions.users.forEach(function(user){
             message.content = message.content.replace(`<@${user.id}>`,`${"`"}@${user.username}${"`"}`); //ゴリ押し
-        };
+        });
 
-        for(const role in message.mentions.roles){
+        message.mentions.roles.forEach(function(role){
             message.content = message.content.replace(`<@&${role.id}>`,`${"`"}@${role.name}${"`"}`); //ゴリ押し
-        };
+        });
+
+
 
         message.content = message.content.replace("@here","`@here`");
         message.content = message.content.replace("@everyone","`@everyone`");
 
         if(message.attachments.size){
             const files = message.attachments;
-            for(const file in files){
+            files.forEach(function(file){
                 message.content += "\n"+file.url;
-            };
+            });
         };
 
         if(message.channelId != config.mainRoom){
