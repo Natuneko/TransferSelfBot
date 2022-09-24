@@ -1,16 +1,12 @@
-const fs = require("fs");
+const config = require("./config.json")
 const { Client,WebhookClient } = require("discord.js-selfbot-v13");
 const client = new Client({
     checkUpdate: false,
 });
 
-const config = JSON.parse(fs.readFileSync("config.json").toString());
-
 const webhookClient = new WebhookClient({
     url:config.transferTo
 });
-
-var token = config.token;
 
 client.on("ready", async () => {
     console.log("Bot Start");
@@ -20,24 +16,23 @@ client.on("ready", async () => {
 
 client.on("messageCreate", async message => {
     if(message.guildId == config.tranferFrom){
-        
-        message.mentions.users.forEach(function(user){
-            message.content = message.content.replace(`<@${user.id}>`,`${"`"}@${user.username}${"`"}`); //ゴリ押し
-        });
 
-        message.mentions.roles.forEach(function(role){
+        for(const user in  message.mentions.users){
+            message.content = message.content.replace(`<@${user.id}>`,`${"`"}@${user.username}${"`"}`); //ゴリ押し
+        };
+
+        for(const role in message.mentions.roles){
             message.content = message.content.replace(`<@&${role.id}>`,`${"`"}@${role.name}${"`"}`); //ゴリ押し
-        });
+        };
 
         message.content = message.content.replace("@here","`@here`");
         message.content = message.content.replace("@everyone","`@everyone`");
 
         if(message.attachments.size){
             const files = message.attachments;
-            files.forEach(function(file){
+            for(const file in files){
                 message.content += "\n"+file.url;
-            });
-    
+            };
         };
 
         if(message.channelId != config.mainRoom){
@@ -52,4 +47,4 @@ client.on("messageCreate", async message => {
     };
 });
 
-client.login(token);
+client.login(config.token);
